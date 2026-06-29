@@ -1,0 +1,297 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  AGENT
+}
+
+enum ChannelType {
+  WHATSAPP
+  INSTAGRAM
+  TELEGRAM
+  EMAIL
+}
+
+enum ChannelStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+}
+
+enum ConversationStatus {
+  OPEN
+  CLOSED
+  WAITING
+}
+
+enum SenderType {
+  AGENT
+  CUSTOMER
+  BOT
+}
+
+enum ContentType {
+  TEXT
+  IMAGE
+  FILE
+  INTERACTIVE
+}
+
+enum Classification {
+  INQUIRY
+  COMPLAINT
+  REQUEST
+  OTHER
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+}
+
+enum KnowledgeBaseSource {
+  MANUAL
+  PDF
+  SUGGESTED
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  plan      String   @default("trial")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users                User[]
+  channels             Channel[]
+  customers            Customer[]
+  conversations        Conversation[]
+  tickets              Ticket[]
+  quickReplies         QuickReply[]
+  knowledgeBase        KnowledgeBaseEntry[]
+  satisfactionSurveys  SatisfactionSurvey[]
+}
+
+model User {
+  id           String   @id @default(cuid())
+  orgId        String
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         UserRole @default(AGENT)
+  avatar       String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  assignedConversations Conversation[] @relation("AssignedTo")
+  sentMessages          Message[]       @relation("AgentMessages")
+  createdQuickReplies   QuickReply[]
+  assignedTickets       Ticket[]        @relation("TicketAssignee")
+  customerNotes         CustomerNote[]
+}
+
+model Channel {
+  id          String        @id @default(cuid())
+  orgId       String
+  type        ChannelType
+  credentials String        // مشفر باستخدام AES-256-GCM، Base64 encoded
+  status      ChannelStatus @default(ACTIVE)
+  webhookUrl  String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@unique([orgId, type])
+}
+
+model Customer {
+  id                 String   @id @default(cuid())
+  orgId              String
+  name               String
+  phone              String?
+  email              String?
+  whatsappPhone      String?
+  instagramId        String?
+  telegramId         String?
+  avatar             String?
+
+  totalConversations Int      @default(0)
+  firstSeen          DateTime @default(now())
+  lastSeen           DateTime @updatedAt
+  satisfactionScore  Float?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization  Organization    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+  messages      Message[]       @relation("CustomerMessages")
+  tickets       Ticket[]
+  tags          CustomerTag[]
+  notes         CustomerNote[]
+
+  @@index([orgId, phone])
+  @@index([orgId, email])
+  @@index([orgId, whatsappPhone])
+  @@index([orgId, instagramId])
+  @@index([orgId, telegramId])
+  @@index([orgId, satisfactionScore])
+}
+
+model CustomerTag {
+  id         String   @id @default(cuid())
+  customerId String
+  tag        String
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([tag])
+}
+
+model CustomerNote {
+  id         String   @id @default(cuid())
+  customerId String
+  content    String
+  createdBy  String
+  createdAt  DateTime @default(now())
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  author   User     @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([customerId])
+}
+
+model Conversation {
+  id             String              @id @default(cuid())
+  orgId          String
+  customerId     String
+  channel        ChannelType
+  status         ConversationStatus  @default(OPEN)
+  assignedTo     String?
+  classification Classification?
+  sentiment      String?
+  lastMessageAt  DateTime?
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+
+  organization    Organization        @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  customer        Customer            @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  assignedAgent   User?               @relation("AssignedTo", fields: [assignedTo], references: [id], onDelete: SetNull)
+  messages        Message[]
+  ticket          Ticket?
+  satisfactionSurvey SatisfactionSurvey?
+
+  @@index([orgId, status, channel, updatedAt])
+  @@index([orgId, customerId])
+  @@index([assignedTo])
+  @@index([classification])
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  senderType     SenderType
+  agentId        String?
+  customerId     String?
+  content        String
+  contentType    ContentType @default(TEXT)
+  metadata       Json?
+  createdAt      DateTime    @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  agent        User?        @relation("AgentMessages", fields: [agentId], references: [id], onDelete: SetNull)
+  customer     Customer?    @relation("CustomerMessages", fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([conversationId, createdAt])
+  @@index([agentId])
+  @@index([customerId])
+}
+
+model Ticket {
+  id             String        @id @default(cuid())
+  orgId          String
+  conversationId String?       @unique
+  subject        String
+  description    String?
+  priority       TicketPriority @default(MEDIUM)
+  status         TicketStatus  @default(OPEN)
+  assignedTo     String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  organization Organization  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  conversation Conversation? @relation(fields: [conversationId], references: [id], onDelete: SetNull)
+  assignee     User?         @relation("TicketAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+
+  @@index([orgId, status, priority])
+  @@index([assignedTo])
+}
+
+model SatisfactionSurvey {
+  id             String   @id @default(cuid())
+  orgId          String
+  conversationId String   @unique
+  status         String   @default("PENDING")
+  rating         Int?
+  feedback       String?
+  sentAt         DateTime?
+  completedAt    DateTime?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, status])
+}
+
+model QuickReply {
+  id        String   @id @default(cuid())
+  orgId     String
+  name      String
+  content   String
+  folder    String?
+  createdBy String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  creator      User         @relation(fields: [createdBy], references: [id], onDelete: SetNull)
+
+  @@index([orgId, folder])
+}
+
+model KnowledgeBaseEntry {
+  id        String              @id @default(cuid())
+  orgId     String
+  question  String
+  answer    String
+  source    KnowledgeBaseSource @default(MANUAL)
+  isActive  Boolean             @default(true)
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  organization Organization @relation(fields: [orgId], references: [id], onDelete: Cascade)
+
+  @@index([orgId, isActive])
+}

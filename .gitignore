@@ -1,0 +1,60 @@
+# التبعيات
+node_modules/
+.pnp
+.pnp.js
+
+# بناء الإنتاج
+dist/
+build/
+
+# متغيرات البيئة
+.env
+.env.*
+!.env.example
+!.env.production.example
+!.env.staging.example
+
+# السجلات
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# النسخ الاحتياطي
+backups/
+
+# Next.js
+.next/
+out/
+
+# تغطية الاختبارات
+coverage/
+.nyc_output/
+
+# نظام التشغيل
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Terraform
+terraform/.terraform/
+terraform/*.tfstate
+terraform/*.tfstate.*
+terraform/*.tfvars
+
+# ملفات مؤقتة
+*.tmp
+*.temp
+.cache/

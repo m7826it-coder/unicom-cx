@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: unicom
+      POSTGRES_PASSWORD: staging_pass
+      POSTGRES_DB: unicom_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_staging:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U unicom"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass staging_redis_pass
+    ports:
+      - "6380:6379"
+    volumes:
+      - redisdata_staging:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "staging_redis_pass", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build: .
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  backup:
+    image: postgres:16-alpine
+    depends_on:
+      - postgres
+    volumes:
+      - ./scripts/backup.sh:/backup.sh:ro
+      - ./backups:/backups
+    environment:
+      DB_HOST: postgres
+      DB_USER: unicom
+      DB_NAME: unicom_db
+      PGPASSWORD: staging_pass
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        echo "0 3 * * 0 /backup.sh >> /var/log/backup.log 2>&1" > /etc/crontabs/root
+        crond -f
+
+volumes:
+  pgdata_staging:
+  redisdata_staging:

@@ -1,0 +1,15 @@
+node_modules
+dist
+.env
+.env.*
+backups
+tests
+docs
+.git
+.gitignore
+*.md
+docker-compose*.yml
+Dockerfile
+.dockerignore
+prisma/migrations
+terraform
