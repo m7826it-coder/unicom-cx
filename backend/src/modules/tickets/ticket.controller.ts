@@ -15,12 +15,19 @@ export class TicketController {
     } catch (err) { next(err); }
   }
 
-  async createStandalone(req: Request, res: Response, next: NextFunction) {
-    try {
-      const ticket = await ticketService.createStandalone(req.user!.orgId, req.body);
-      created(res, ticket);
-    } catch (err) { next(err); }
+ async createStandalone(req: Request, res: Response, next: NextFunction) {
+  try {
+    const ticket = await ticketService.createStandalone(
+      req.user!.orgId,
+      req.body.customerId, // ✅ ADD THIS
+      req.body
+    );
+
+    created(res, ticket);
+  } catch (err) {
+    next(err);
   }
+}
 
   async getById(req: Request, res: Response, next: NextFunction) {
     try {
