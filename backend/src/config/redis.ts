@@ -1,4 +1,8 @@
-import { default as Redis } from 'ioredis';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+const Redis = require('ioredis');
+
 import { env } from './env.js';
 
 const redis = new Redis(env.REDIS_URL, {
