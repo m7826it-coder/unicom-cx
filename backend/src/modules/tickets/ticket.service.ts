@@ -1,4 +1,3 @@
-// src/modules/tickets/ticket.service.ts
 import prisma from '@/config/database.js';
 import { ApiError } from '@/common/utils/ApiError.js';
 import { logger } from '@/common/utils/logger.js';
@@ -21,12 +20,14 @@ export class TicketService {
     });
 
     if (!conversation) throw ApiError.notFound('Conversation not found');
-    if (conversation.ticket) throw ApiError.conflict('A ticket already exists for this conversation');
+    if (conversation.ticket)
+      throw ApiError.conflict('A ticket already exists for this conversation');
 
     const ticket = await prisma.ticket.create({
       data: {
         orgId,
         conversationId,
+        customerId: conversation.customerId, // ✅ FIX
         subject: data.subject,
         description: data.description,
         priority: data.priority ?? 'MEDIUM',
@@ -48,11 +49,13 @@ export class TicketService {
    */
   async createStandalone(
     orgId: string,
+    customerId: string, // ✅ FIX: لازم العميل لأن schema يفرضه
     data: { subject: string; description?: string; priority?: TicketPriority }
   ) {
     const ticket = await prisma.ticket.create({
       data: {
         orgId,
+        customerId, // ✅ FIX
         subject: data.subject,
         description: data.description,
         priority: data.priority ?? 'MEDIUM',
@@ -178,8 +181,7 @@ export class TicketService {
   }
 
   /**
-   * تصعيد تلقائي: تحويل المحادثات المفتوحة لأكثر من 24 ساعة إلى تذاكر.
-   * يستخدم createMany لتجنب مشكلة N+1 Query.
+   * تصعيد تلقائي
    */
   async autoEscalate() {
     const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
@@ -199,21 +201,22 @@ export class TicketService {
     }
 
     const result = await prisma.ticket.createMany({
-     data: staleConversations.map((conv) => ({
-     orgId: conv.orgId,
-     customerId: conv.customerId,
-     conversationId: conv.id ?? null,
-     subject: 'Auto-escalated: Conversation inactive for >24h',
-     description: `Automatically escalated due to inactivity. Original channel: ${conv.channel}. Customer: ${conv.customerId}`,
-     priority: 'MEDIUM' as const,
-     status: 'OPEN' as const,
-  })),
-  skipDuplicates: true,
-});
+      data: staleConversations.map((conv) => ({
+        orgId: conv.orgId,
+        conversationId: conv.id,
+        customerId: conv.customerId, // ✅ FIX
+        subject: 'Auto-escalated: Conversation inactive for >24h',
+        description: `Automatically escalated due to inactivity. Original channel: ${conv.channel}. Customer: ${conv.customerId}`,
+        priority: 'MEDIUM',
+        status: 'OPEN',
+      })),
+      skipDuplicates: true,
+    });
 
     logger.info(
       `Auto-escalation complete: ${result.count} tickets created from ${staleConversations.length} stale conversations`
     );
+
     return { escalated: result.count, total: staleConversations.length };
   }
 }
