@@ -1,76 +1,89 @@
 // src/common/utils/logger.ts
-
 import pino from 'pino';
 import { env } from '@/config/env.js';
 
-const isProduction = env.NODE_ENV === 'production' || env.NODE_ENV === 'staging';
+const isProduction =
+  env.NODE_ENV === 'production' || env.NODE_ENV === 'staging';
 
 const pinoLogger = pino({
   level: isProduction ? 'info' : 'debug',
-  ...(env.NODE_ENV === 'development' && {
-    transport: {
-      target: 'pino-pretty',
-      options: {
-        colorize: true,
-        translateTime: 'SYS:standard',
-        ignore: 'pid,hostname',
-      },
-    },
-  }),
+  ...(env.NODE_ENV === 'development'
+    ? {
+        transport: {
+          target: 'pino-pretty',
+          options: {
+            colorize: true,
+            translateTime: 'SYS:standard',
+            ignore: 'pid,hostname',
+          },
+        },
+      }
+    : {}),
   redact: {
     paths: ['req.headers.cookie', 'req.headers.authorization'],
     censor: '[REDACTED]',
   },
 });
 
-type InfoMethod = (...args: Parameters<typeof pinoLogger.info>) => void;
-type WarnMethod = (...args: Parameters<typeof pinoLogger.warn>) => void;
-type DebugMethod = (...args: Parameters<typeof pinoLogger.debug>) => void;
-type TraceMethod = (...args: Parameters<typeof pinoLogger.trace>) => void;
-type FatalMethod = (...args: Parameters<typeof pinoLogger.fatal>) => void;
+type LogMethod = (...args: unknown[]) => void;
 
 type ErrorMethod = {
   (message: string, error: Error): void;
   (obj: unknown, message?: string): void;
+  (error: Error): void;
 };
 
-const info: InfoMethod = (...args) => {
-  pinoLogger.info(...args);
+const callLogger = (method: (...args: any[]) => void, args: unknown[]) => {
+  method(...(args as any[]));
 };
 
-const warn: WarnMethod = (...args) => {
-  pinoLogger.warn(...args);
+const info: LogMethod = (...args) => {
+  callLogger(pinoLogger.info.bind(pinoLogger), args);
 };
 
-const debug: DebugMethod = (...args) => {
-  pinoLogger.debug(...args);
+const warn: LogMethod = (...args) => {
+  callLogger(pinoLogger.warn.bind(pinoLogger), args);
 };
 
-const trace: TraceMethod = (...args) => {
-  pinoLogger.trace(...args);
+const debug: LogMethod = (...args) => {
+  callLogger(pinoLogger.debug.bind(pinoLogger), args);
 };
 
-const fatal: FatalMethod = (...args) => {
-  pinoLogger.fatal(...args);
+const trace: LogMethod = (...args) => {
+  callLogger(pinoLogger.trace.bind(pinoLogger), args);
+};
+
+const fatal: LogMethod = (...args) => {
+  callLogger(pinoLogger.fatal.bind(pinoLogger), args);
 };
 
 const error = ((arg1: unknown, arg2?: unknown): void => {
+  if (arg1 instanceof Error) {
+    pinoLogger.error({ err: arg1 }, arg1.message);
+    return;
+  }
+
   if (arg2 instanceof Error) {
     pinoLogger.error({ err: arg2 }, String(arg1));
     return;
   }
 
   if (typeof arg2 === 'string') {
-    pinoLogger.error(arg1 as never, arg2);
+    if (typeof arg1 === 'object' && arg1 !== null) {
+      pinoLogger.error(arg1 as Record<string, unknown>, arg2);
+      return;
+    }
+
+    pinoLogger.error({ value: arg1 }, arg2);
     return;
   }
 
-  if (arg1 instanceof Error) {
-    pinoLogger.error({ err: arg1 });
+  if (typeof arg1 === 'object' && arg1 !== null) {
+    pinoLogger.error(arg1 as Record<string, unknown>);
     return;
   }
 
-  pinoLogger.error(arg1 as never);
+  pinoLogger.error({ value: arg1 });
 }) as ErrorMethod;
 
 export const logger = {
