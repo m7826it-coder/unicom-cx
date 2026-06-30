@@ -29,12 +29,14 @@ type LogMethod = (...args: unknown[]) => void;
 
 type ErrorMethod = {
   (message: string, error: Error): void;
+  (message: string, error: unknown): void;
   (obj: unknown, message?: string): void;
   (error: Error): void;
+  (error: unknown): void;
 };
 
 const callLogger = (method: (...args: any[]) => void, args: unknown[]) => {
-  method(...(args as any[]));
+  method.apply(pinoLogger, args as any[]);
 };
 
 const info: LogMethod = (...args) => {
