@@ -4,7 +4,7 @@ import { env } from '@/config/env.js';
 import { ApiError } from '@/common/utils/ApiError.js';
 import { logger } from '@/common/utils/logger.js';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { type SignOptions } from 'jsonwebtoken';
 
 export interface RegisterRequest {
   organizationName: string;
@@ -45,17 +45,19 @@ export interface AuthMeResponse {
 }
 
 export class AuthService {
-  /**
-   * تسجيل منظمة جديدة مع مستخدم مدير.
-   */
-  async register(data: RegisterRequest): Promise<{ user: UserResponse; organization: OrganizationResponse }> {
+  async register(
+    data: RegisterRequest
+  ): Promise<{ user: UserResponse; organization: OrganizationResponse }> {
     this.validatePasswordStrength(data.password);
 
     if (data.password !== data.passwordConfirmation) {
       throw ApiError.badRequest('Passwords do not match');
     }
 
-    const existingUser = await prisma.user.findUnique({ where: { email: data.email } });
+    const existingUser = await prisma.user.findUnique({
+      where: { email: data.email },
+    });
+
     if (existingUser) {
       throw ApiError.conflict('Email already registered');
     }
@@ -93,7 +95,9 @@ export class AuthService {
       return { user, organization };
     });
 
-    logger.info(`New organization registered: ${result.organization.id} by ${result.user.email}`);
+    logger.info(
+      `New organization registered: ${result.organization.id} by ${result.user.email}`
+    );
 
     return {
       user: {
@@ -109,10 +113,9 @@ export class AuthService {
     };
   }
 
-  /**
-   * تسجيل دخول مستخدم.
-   */
-  async login(data: LoginRequest): Promise<{ user: UserResponse; organization: OrganizationResponse; token: string }> {
+  async login(
+    data: LoginRequest
+  ): Promise<{ user: UserResponse; organization: OrganizationResponse; token: string }> {
     const user = await prisma.user.findUnique({
       where: { email: data.email },
       include: { organization: true },
@@ -153,9 +156,6 @@ export class AuthService {
     };
   }
 
-  /**
-   * جلب بيانات المستخدم الحالي والمنظمة.
-   */
   async getMe(userId: string): Promise<AuthMeResponse> {
     const user = await prisma.user.findUnique({
       where: { id: userId },
@@ -187,9 +187,6 @@ export class AuthService {
     };
   }
 
-  /**
-   * نسيان كلمة المرور – إرسال رابط إعادة تعيين (محاكاة).
-   */
   async forgotPassword(email: string): Promise<{ message: string }> {
     const user = await prisma.user.findUnique({ where: { email } });
 
@@ -197,21 +194,27 @@ export class AuthService {
       return { message: 'If the email is registered, a reset link has been sent.' };
     }
 
-    const resetToken = jwt.sign({ userId: user.id }, env.JWT_SECRET, { expiresIn: '1h' });
+    const secret = this.getJwtSecret();
+    const resetToken = jwt.sign(
+      { userId: user.id },
+      secret,
+      {
+        expiresIn: '1h',
+      } as SignOptions
+    );
 
-    logger.info(`[DEV] Password reset link for ${email}: https://app.unicomcx.com/reset-password?token=${resetToken}`);
+    logger.info(
+      `[DEV] Password reset link for ${email}: https://app.unicomcx.com/reset-password?token=${resetToken}`
+    );
 
     return { message: 'If the email is registered, a reset link has been sent.' };
   }
 
-  /**
-   * إعادة تعيين كلمة المرور باستخدام رمز صالح.
-   */
   async resetPassword(token: string, password: string): Promise<{ message: string }> {
     let userId: string;
 
     try {
-      const decoded = jwt.verify(token, env.JWT_SECRET) as { userId: string };
+      const decoded = jwt.verify(token, this.getJwtSecret()) as { userId: string };
       userId = decoded.userId;
     } catch {
       throw ApiError.badRequest('Invalid or expired reset token');
@@ -225,6 +228,7 @@ export class AuthService {
     this.validatePasswordStrength(password);
 
     const passwordHash = await bcrypt.hash(password, 12);
+
     await prisma.user.update({
       where: { id: userId },
       data: { passwordHash },
@@ -235,18 +239,24 @@ export class AuthService {
     return { message: 'Password has been reset successfully.' };
   }
 
-  /**
-   * توليد رمز JWT للمصادقة.
-   */
   private generateToken(userId: string, orgId: string, role: string): string {
-    return jwt.sign({ userId, orgId, role }, env.JWT_SECRET, {
-      expiresIn: env.JWT_EXPIRES_IN as string,
-    });
+    return jwt.sign(
+      { userId, orgId, role },
+      this.getJwtSecret(),
+      {
+        expiresIn: (env.JWT_EXPIRES_IN ?? '7d') as SignOptions['expiresIn'],
+      }
+    );
   }
 
-  /**
-   * التحقق من قوة كلمة المرور.
-   */
+  private getJwtSecret(): string {
+    if (!env.JWT_SECRET) {
+      throw new Error('JWT_SECRET is missing');
+    }
+
+    return env.JWT_SECRET;
+  }
+
   private validatePasswordStrength(password: string): void {
     const minLength = 8;
     const hasUpperCase = /[A-Z]/.test(password);
