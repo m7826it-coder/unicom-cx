@@ -30,16 +30,8 @@ export function createQueue(name: string, opts?: QueueOptions): Queue {
     },
   });
 
-  queue.on('error', (error) => {
+  queue.on('error', (error: unknown) => {
     logger.error(`${name} error:`, error);
-  });
-
-  queue.on('completed', (job) => {
-    logger.info(`${name} job ${job.id} completed`);
-  });
-
-  queue.on('failed', (job, error) => {
-    logger.error(`${name} job ${job?.id} failed. Attempts made: ${job?.attemptsMade}`, error);
   });
 
   return queue;
