@@ -199,16 +199,17 @@ export class TicketService {
     }
 
     const result = await prisma.ticket.createMany({
-      data: staleConversations.map((conv) => ({
-        orgId: conv.orgId,
-        conversationId: conv.id,
-        subject: 'Auto-escalated: Conversation inactive for >24h',
-        description: `Automatically escalated due to inactivity. Original channel: ${conv.channel}. Customer: ${conv.customerId}`,
-        priority: 'MEDIUM' as const,
-        status: 'OPEN' as const,
-      })),
-      skipDuplicates: true,
-    });
+     data: staleConversations.map((conv) => ({
+     orgId: conv.orgId,
+     customerId: conv.customerId,
+     conversationId: conv.id ?? null,
+     subject: 'Auto-escalated: Conversation inactive for >24h',
+     description: `Automatically escalated due to inactivity. Original channel: ${conv.channel}. Customer: ${conv.customerId}`,
+     priority: 'MEDIUM' as const,
+     status: 'OPEN' as const,
+  })),
+  skipDuplicates: true,
+});
 
     logger.info(
       `Auto-escalation complete: ${result.count} tickets created from ${staleConversations.length} stale conversations`
