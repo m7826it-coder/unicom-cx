@@ -1,9 +1,12 @@
+// src/config/redis.ts
 import { createRequire } from 'module';
+import { env } from './env.js';
+
 const require = createRequire(import.meta.url);
 
-const Redis = require('ioredis');
+type RedisConstructor = typeof import('ioredis').default;
 
-import { env } from './env.js';
+const Redis = require('ioredis') as RedisConstructor;
 
 const redis = new Redis(env.REDIS_URL, {
   maxRetriesPerRequest: null,
