@@ -3,9 +3,7 @@
 import pino from 'pino';
 import { env } from '@/config/env.js';
 
-const isProduction =
-  env.NODE_ENV === 'production' ||
-  env.NODE_ENV === 'staging';
+const isProduction = env.NODE_ENV === 'production' || env.NODE_ENV === 'staging';
 
 const pinoLogger = pino({
   level: isProduction ? 'info' : 'debug',
@@ -25,26 +23,45 @@ const pinoLogger = pino({
   },
 });
 
-type LoggerFacade = {
-  info: typeof pinoLogger.info;
-  warn: typeof pinoLogger.warn;
-  debug: typeof pinoLogger.debug;
-  trace: typeof pinoLogger.trace;
-  fatal: typeof pinoLogger.fatal;
-  error: {
-    (message: string, error: Error): void;
-    (obj: unknown, message?: string): void;
-  };
+type InfoMethod = (...args: Parameters<typeof pinoLogger.info>) => void;
+type WarnMethod = (...args: Parameters<typeof pinoLogger.warn>) => void;
+type DebugMethod = (...args: Parameters<typeof pinoLogger.debug>) => void;
+type TraceMethod = (...args: Parameters<typeof pinoLogger.trace>) => void;
+type FatalMethod = (...args: Parameters<typeof pinoLogger.fatal>) => void;
+
+type ErrorMethod = {
+  (message: string, error: Error): void;
+  (obj: unknown, message?: string): void;
 };
 
-const error: LoggerFacade['error'] = ((arg1: unknown, arg2?: unknown): void => {
+const info: InfoMethod = (...args) => {
+  pinoLogger.info(...args);
+};
+
+const warn: WarnMethod = (...args) => {
+  pinoLogger.warn(...args);
+};
+
+const debug: DebugMethod = (...args) => {
+  pinoLogger.debug(...args);
+};
+
+const trace: TraceMethod = (...args) => {
+  pinoLogger.trace(...args);
+};
+
+const fatal: FatalMethod = (...args) => {
+  pinoLogger.fatal(...args);
+};
+
+const error = ((arg1: unknown, arg2?: unknown): void => {
   if (arg2 instanceof Error) {
     pinoLogger.error({ err: arg2 }, String(arg1));
     return;
   }
 
   if (typeof arg2 === 'string') {
-    pinoLogger.error(arg1, arg2);
+    pinoLogger.error(arg1 as never, arg2);
     return;
   }
 
@@ -53,14 +70,14 @@ const error: LoggerFacade['error'] = ((arg1: unknown, arg2?: unknown): void => {
     return;
   }
 
-  pinoLogger.error(arg1);
-}) as LoggerFacade['error'];
+  pinoLogger.error(arg1 as never);
+}) as ErrorMethod;
 
-export const logger: LoggerFacade = {
-  info: (...args) => pinoLogger.info(...args),
-  warn: (...args) => pinoLogger.warn(...args),
-  debug: (...args) => pinoLogger.debug(...args),
-  trace: (...args) => pinoLogger.trace(...args),
-  fatal: (...args) => pinoLogger.fatal(...args),
+export const logger = {
+  info,
+  warn,
+  debug,
+  trace,
+  fatal,
   error,
 };
