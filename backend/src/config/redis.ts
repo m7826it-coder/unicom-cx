@@ -1,5 +1,4 @@
-// src/config/redis.ts
-import Redis from 'ioredis';
+import { default as Redis } from 'ioredis';
 import { env } from './env.js';
 
 const redis = new Redis(env.REDIS_URL, {
@@ -11,7 +10,7 @@ redis.on('connect', () => {
   console.log('🔌 Redis Client connected');
 });
 
-redis.on('error', (error) => {
+redis.on('error', (error: unknown) => {
   console.error('❌ Redis Client error:', error);
 });
 
