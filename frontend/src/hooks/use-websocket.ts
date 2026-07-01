@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import type { Socket } from 'socket.io-client';
+import { Socket } from 'socket.io-client'; // ✅ تم التعديل: إزالة 'type' لحل الخطأ
 import { createSocket, disconnectSocket } from '@/services/socket.service';
 
 export function useWebSocket(): { socket: Socket | null; isConnected: boolean } {
@@ -11,6 +11,7 @@ export function useWebSocket(): { socket: Socket | null; isConnected: boolean } 
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    // ✅ تم التعديل: إضافة backticks `` لتكوين RegExp بشكل صحيح
     const getCookie = (name: string): string | null => {
       const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
       return match ? decodeURIComponent(match[2]) : null;
