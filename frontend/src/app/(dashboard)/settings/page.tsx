@@ -95,7 +95,7 @@ export default function SettingsPage() {
 
   const { data: kbEntries, isLoading: kbLoading, isError: kbError, refetch: refetchKB } = useQuery<KnowledgeBaseEntry[]>({
     queryKey: ['kb-entries'],
-    queryFn: () => fetchApi<KnowledgeBaseEntry[]>('/ai/knowledge-base'),
+    queryFn: () => fetchData<KnowledgeBaseEntry[]>('/ai/knowledge-base'),
   });
 
   const [showKBForm, setShowKBForm] = useState(false);
