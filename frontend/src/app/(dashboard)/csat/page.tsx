@@ -1,7 +1,7 @@
 'use client';
 
 import SurveyList from '@/components/csat/survey-list';
-
+export const dynamic = 'force-dynamic';
 export default function CSATPage() {
   return (
     <div className="space-y-6">
