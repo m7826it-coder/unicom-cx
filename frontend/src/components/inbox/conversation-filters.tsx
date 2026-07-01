@@ -67,7 +67,7 @@ export default function ConversationFilters({ onFiltersChange }: ConversationFil
             value={channel}
             onValueChange={(val) => {
               setChannel(val);
-              applyFilters({ channel: val });
+              applyFilters({ channel: val as Filters['channel'] });
             }}
           >
             <DropdownMenuRadioItem value="">الكل</DropdownMenuRadioItem>
