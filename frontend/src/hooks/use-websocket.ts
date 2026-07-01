@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Socket } from 'socket.io-client'; // ✅ استيراد عادي (بدون type)
+import type { Socket } from 'socket.io-client'; // ✅ استيراد كنوع فقط
 import { createSocket, disconnectSocket } from '@/services/socket.service';
 
 export function useWebSocket(): { socket: Socket | null; isConnected: boolean } {
@@ -13,7 +13,9 @@ export function useWebSocket(): { socket: Socket | null; isConnected: boolean } 
   useEffect(() => {
     const getCookie = (name: string): string | null => {
       const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
-      return match ? decodeURIComponent(match[2]) : null;
+      // ✅ التحقق من وجود match[2] قبل decodeURIComponent
+      if (!match || !match[2]) return null;
+      return decodeURIComponent(match[2]);
     };
 
     const token = getCookie('token');
