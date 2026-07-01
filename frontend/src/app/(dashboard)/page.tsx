@@ -13,7 +13,10 @@ import type { DashboardData } from '@/types/dashboard.types';
 export default function DashboardPage() {
   const { data, isLoading, isError } = useQuery<DashboardData>({
     queryKey: ['dashboard'],
-    queryFn: () => fetchApi<DashboardData>('/analytics/overview'),
+    queryFn: async () => {
+  const res = await fetchApi<DashboardData>('/analytics/overview');
+  return res as DashboardData;
+},
     retry: 2,
     staleTime: 5 * 60 * 1000,
   });
