@@ -17,9 +17,10 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    typedRoutes: true,
-  },
+  // تم تعطيل typedRoutes لإصلاح خطأ TypeScript في صفحات auth
+  // experimental: {
+  //   typedRoutes: true,
+  // },
 };
 
 export default nextConfig;
