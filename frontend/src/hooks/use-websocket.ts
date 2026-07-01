@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Socket } from 'socket.io-client'; // ✅ تم إزالة 'type'
+import { Socket } from 'socket.io-client'; // ✅ استيراد عادي (بدون type)
 import { createSocket, disconnectSocket } from '@/services/socket.service';
 
 export function useWebSocket(): { socket: Socket | null; isConnected: boolean } {
@@ -11,7 +11,6 @@ export function useWebSocket(): { socket: Socket | null; isConnected: boolean } 
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // ✅ تم إصلاح RegExp بإضافة backticks
     const getCookie = (name: string): string | null => {
       const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
       return match ? decodeURIComponent(match[2]) : null;
@@ -25,28 +24,23 @@ export function useWebSocket(): { socket: Socket | null; isConnected: boolean } 
 
     socket.on('connect', () => setIsConnected(true));
     socket.on('disconnect', () => setIsConnected(false));
-
     socket.on('conversation:new', () => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     });
-
     socket.on('conversation:updated', () => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     });
-
     socket.on('message:new', (data: { conversationId?: string }) => {
       if (data?.conversationId) {
         queryClient.invalidateQueries({ queryKey: ['messages', data.conversationId] });
       }
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
     });
-
     socket.on('message:updated', (data: { conversationId?: string }) => {
       if (data?.conversationId) {
         queryClient.invalidateQueries({ queryKey: ['messages', data.conversationId] });
       }
     });
-
     socket.on('ticket:created', () => {
       queryClient.invalidateQueries({ queryKey: ['tickets'] });
     });
