@@ -14,7 +14,7 @@ export default function DashboardPage() {
   const { data, isLoading, isError } = useQuery<DashboardData>({
     queryKey: ['dashboard'],
     queryFn: async () => {
-  const res = await fetchApi<DashboardData>('/analytics/overview');
+  const res = await fetchData<DashboardData>('/analytics/overview');
   return res as DashboardData;
 },
     retry: 2,
