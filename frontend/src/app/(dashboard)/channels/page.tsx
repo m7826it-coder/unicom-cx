@@ -1,10 +1,11 @@
 'use client';
-
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ChannelList from '@/components/channels/channel-list';
 import ConnectChannelDialog from '@/components/channels/connect-channel-dialog';
+
+export const dynamic = 'force-dynamic';
 
 export default function ChannelsPage() {
   const [isConnectDialogOpen, setIsConnectDialogOpen] = useState(false);
