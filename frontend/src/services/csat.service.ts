@@ -1,4 +1,4 @@
-import { fetchApi, type PaginatedResponse } from '@/services/api-client';
+import { fetchData, type PaginatedResponse } from '@/services/api-client';
 import type {
   CSATSurveyResponse,
   CSATSurveyFilters,
@@ -25,18 +25,18 @@ export class CSATService {
   }
 
   async getSurvey(conversationId: string): Promise<CSATSurveyResponse> {
-    return fetchApi<CSATSurveyResponse>(`/csat/${conversationId}`);
+    return fetchData<CSATSurveyResponse>(`/csat/${conversationId}`);
   }
 
   async generateSurvey(conversationId: string, customerId: string, channel: string): Promise<CSATSurveyResponse> {
-    return fetchApi<CSATSurveyResponse>('/csat/generate', {
+    return fetchData<CSATSurveyResponse>('/csat/generate', {
       method: 'POST',
       body: JSON.stringify({ conversationId, customerId, channel }),
     });
   }
 
   async respondToSurvey(conversationId: string, orgId: string, rating: number, feedback?: string): Promise<CSATSurveyResponse> {
-    return fetchApi<CSATSurveyResponse>('/csat/respond', {
+    return fetchData<CSATSurveyResponse>('/csat/respond', {
       method: 'POST',
       body: JSON.stringify({ conversationId, orgId, rating, feedback }),
     });
