@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -13,7 +13,8 @@ import { authService } from '@/services/auth.service';
 import { loginSchema, type LoginFormData } from '@/lib/validators';
 import { cn } from '@/lib/utils';
 
-export default function LoginPage() {
+// مكون داخلي يستخدم useSearchParams
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get('returnUrl') || '/dashboard';
@@ -97,5 +98,14 @@ export default function LoginPage() {
         </p>
       </CardFooter>
     </Card>
+  );
+}
+
+// الصفحة الرئيسية التي تغلف النموذج بـ Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="text-center p-4">جاري التحميل...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
