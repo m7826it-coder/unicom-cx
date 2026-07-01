@@ -1,7 +1,7 @@
 // src/modules/ai/ai-admin.service.ts
-import prisma from '@/config/database.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import prisma from '../../config/database.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
 import type { KnowledgeBaseEntry } from '@prisma/client';
 
 export interface BotSettings {

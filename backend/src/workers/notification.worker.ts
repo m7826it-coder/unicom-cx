@@ -1,7 +1,7 @@
 import { Worker } from 'bullmq';
-import { connection } from '@/config/bullmq.js';
-import { getIO } from '@/modules/inbox/inbox.gateway.js';
-import { logger } from '@/common/utils/logger.js';
+import { connection } from '../config/bullmq.js';
+import { getIO } from '../modules/inbox/inbox.gateway.js';
+import { logger } from '../common/utils/logger.js';
 import type { Job } from 'bullmq';
 
 /**

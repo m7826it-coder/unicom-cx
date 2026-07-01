@@ -1,8 +1,8 @@
 // src/modules/channels/channels.service.ts
 import crypto from 'crypto';
-import { env } from '@/config/env.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import { env } from '../../config/env.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
 
 export interface ChannelCredentials {
   phoneNumberId?: string;

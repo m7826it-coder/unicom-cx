@@ -1,7 +1,7 @@
 // src/modules/inbox/services/customer.service.ts
-import prisma from '@/config/database.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import prisma from '../../../config/database.js';
+import { ApiError } from '../../../common/utils/ApiError.js';
+import { logger } from '../../../common/utils/logger.js';
 import type { ChannelType, Prisma } from '@prisma/client';
 
 export class CustomerService {

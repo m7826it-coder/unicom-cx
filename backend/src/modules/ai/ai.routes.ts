@@ -1,7 +1,7 @@
 // src/modules/ai/ai.routes.ts
 import { Router } from 'express';
 import { aiController } from './ai.controller.js';
-import { authMiddleware } from '@/common/middleware/auth.middleware.js';
+import { authMiddleware } from '../../common/middleware/auth.middleware.js';
 import { body } from 'express-validator';
 
 const router = Router();

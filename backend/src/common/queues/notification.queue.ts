@@ -1,5 +1,5 @@
 // src/common/queues/notification.queue.ts
-import { createQueue } from '@/config/bullmq.js';
+import { createQueue } from '../../config/bullmq.js';
 
 /**
  * طابور الإشعارات. ينقل أحداث النظام إلى خدمة WebSocket

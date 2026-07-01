@@ -2,7 +2,7 @@
 import type { Request, Response, NextFunction } from 'express';
 import { conversationService } from './services/conversation.service.js';
 import { messageService } from './services/message.service.js';
-import { success, created, paginated } from '@/common/utils/responseHelper.js';
+import { success, created, paginated } from '../../common/utils/responseHelper.js';
 import type { ConversationStatus, ContentType } from '@prisma/client';
 
 export class InboxController {

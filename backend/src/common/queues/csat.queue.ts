@@ -1,5 +1,5 @@
 // src/common/queues/csat.queue.ts
-import { createQueue } from '@/config/bullmq.js';
+import { createQueue } from '../../config/bullmq.js';
 
 /**
  * طابور استبيانات رضا العملاء (CSAT).

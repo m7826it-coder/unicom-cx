@@ -1,8 +1,8 @@
 // src/modules/auth/auth.controller.ts
 import type { Request, Response, NextFunction } from 'express';
 import { authService } from './auth.service.js';
-import { success, created } from '@/common/utils/responseHelper.js';
-import { env } from '@/config/env.js';
+import { success, created } from '../../common/utils/responseHelper.js';
+import { env } from '../../config/env.js';
 
 export class AuthController {
   /**

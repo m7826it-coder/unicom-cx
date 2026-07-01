@@ -1,7 +1,7 @@
 // src/common/middleware/idempotency.middleware.ts
 import type { Request, Response, NextFunction } from 'express';
-import redis from '@/config/redis.js';
-import { logger } from '@/common/utils/logger.js';
+import redis from '../../config/redis.js';
+import { logger } from '../../common/utils/logger.js';
 
 const IDEMPOTENCY_PREFIX = 'idempotency:';
 const TTL_SECONDS = 24 * 60 * 60;

@@ -1,7 +1,7 @@
 // src/common/utils/health.ts
-import prisma from '@/config/database.js';
-import redis from '@/config/redis.js';
-import { logger } from '@/common/utils/logger.js';
+import prisma from '../../config/database.js';
+import redis from '../../config/redis.js';
+import { logger } from '../../common/utils/logger.js';
 
 /**
  * فحص اتصال قاعدة البيانات.

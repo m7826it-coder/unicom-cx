@@ -1,9 +1,9 @@
 // src/modules/team/team.service.ts
-import prisma from '@/config/database.js';
-import redis from '@/config/redis.js';
-import { env } from '@/config/env.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import prisma from '../../config/database.js';
+import redis from '../../config/redis.js';
+import { env } from '../../config/env.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 

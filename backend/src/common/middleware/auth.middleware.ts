@@ -1,10 +1,10 @@
 // src/common/middleware/auth.middleware.ts
 import type { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
-import { env } from '@/config/env.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
-import redis from '@/config/redis.js';
+import { env } from '../../config/env.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
+import redis from '../../config/redis.js';
 
 declare global {
   namespace Express {

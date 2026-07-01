@@ -1,14 +1,14 @@
 // src/modules/auth/auth.routes.ts
 import { Router } from 'express';
 import { authController } from './auth.controller.js';
-import { authMiddleware } from '@/common/middleware/auth.middleware.js';
+import { authMiddleware } from '../../common/middleware/auth.middleware.js';
 import {
   registerRules,
   loginRules,
   forgotPasswordRules,
   resetPasswordRules,
 } from './auth.validators.js';
-import { createAuthLimiter, createGeneralLimiter } from '@/common/middleware/rateLimiter.middleware.js';
+import { createAuthLimiter, createGeneralLimiter } from '../../common/middleware/rateLimiter.middleware.js';
 
 const router = Router();
 

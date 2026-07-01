@@ -1,7 +1,7 @@
 // src/common/middleware/role.middleware.ts
 import type { Request, Response, NextFunction } from 'express';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
 
 /**
  * وسيط الصلاحيات. يتحقق من أن المستخدم يملك أحد الأدوار المطلوبة.

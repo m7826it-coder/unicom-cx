@@ -1,5 +1,5 @@
 // src/common/queues/ticket.queue.ts
-import { createQueue } from '@/config/bullmq.js';
+import { createQueue } from '../../config/bullmq.js';
 
 /**
  * طابور التذاكر. يستخدم لإنشاء التذاكر (يدويًا أو تلقائيًا)

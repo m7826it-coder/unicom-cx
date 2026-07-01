@@ -1,7 +1,7 @@
 // src/modules/csat/csat.controller.ts
 import type { Request, Response, NextFunction } from 'express';
 import { csatService } from './csat.service.js';
-import { success, created } from '@/common/utils/responseHelper.js';
+import { success, created } from '../../common/utils/responseHelper.js';
 
 export class CSATController {
   async generateSurvey(req: Request, res: Response, next: NextFunction) {

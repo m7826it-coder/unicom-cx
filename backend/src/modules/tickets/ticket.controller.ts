@@ -1,7 +1,7 @@
 // src/modules/tickets/ticket.controller.ts
 import type { Request, Response, NextFunction } from 'express';
 import { ticketService } from './ticket.service.js';
-import { success, created } from '@/common/utils/responseHelper.js';
+import { success, created } from '../../common/utils/responseHelper.js';
 
 export class TicketController {
   async createFromConversation(req: Request, res: Response, next: NextFunction) {

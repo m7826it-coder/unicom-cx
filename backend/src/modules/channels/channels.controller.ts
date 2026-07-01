@@ -1,10 +1,10 @@
 // src/modules/channels/channels.controller.ts
 import type { Request, Response, NextFunction } from 'express';
-import prisma from '@/config/database.js';
+import prisma from '../../config/database.js';
 import { channelService } from './channels.service.js';
-import { success, created } from '@/common/utils/responseHelper.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import { success, created } from '../../common/utils/responseHelper.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
 import type { ChannelType } from '@prisma/client';
 
 export class ChannelsController {

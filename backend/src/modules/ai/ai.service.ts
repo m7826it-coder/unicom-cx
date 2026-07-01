@@ -1,7 +1,7 @@
 // src/modules/ai/ai.service.ts
-import { geminiConfig } from '@/config/gemini.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
+import { geminiConfig } from '../../config/gemini.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
 
 export class AIService {
   private async callGemini(prompt: string, temperature: number = 0.2): Promise<string> {

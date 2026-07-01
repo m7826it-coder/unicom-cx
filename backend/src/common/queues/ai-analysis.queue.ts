@@ -1,5 +1,5 @@
 // src/common/queues/ai-analysis.queue.ts
-import { createQueue } from '@/config/bullmq.js';
+import { createQueue } from '../../config/bullmq.js';
 
 /**
  * طابور تحليل الذكاء الاصطناعي. يستخدم لمهام:

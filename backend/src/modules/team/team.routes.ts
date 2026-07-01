@@ -2,9 +2,9 @@
 import { Router } from 'express';
 import type { Request, Response, NextFunction } from 'express';
 import { teamService } from './team.service.js';
-import { authMiddleware } from '@/common/middleware/auth.middleware.js';
-import { requireRole } from '@/common/middleware/role.middleware.js';
-import { success, created } from '@/common/utils/responseHelper.js';
+import { authMiddleware } from '../../common/middleware/auth.middleware.js';
+import { requireRole } from '../../common/middleware/role.middleware.js';
+import { success, created } from '../../common/utils/responseHelper.js';
 import { body } from 'express-validator';
 
 const router = Router();

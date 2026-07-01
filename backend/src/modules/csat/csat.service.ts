@@ -1,9 +1,9 @@
 // src/modules/csat/csat.service.ts
-import prisma from '@/config/database.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
-import { notificationQueue } from '@/common/queues/index.js';
-import { Events } from '@/common/events/events.js';
+import prisma from '../../config/database.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
+import { notificationQueue } from '../../common/queues/index.js';
+import { Events } from '../../common/events/events.js';
 
 export class CSATService {
   /**

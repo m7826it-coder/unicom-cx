@@ -1,8 +1,8 @@
 // src/modules/ai/ai.controller.ts
 import type { Request, Response, NextFunction } from 'express';
 import { aiAdminService } from './ai-admin.service.js';
-import { success, created } from '@/common/utils/responseHelper.js';
-import { logger } from '@/common/utils/logger.js';
+import { success, created } from '../../common/utils/responseHelper.js';
+import { logger } from '../../common/utils/logger.js';
 
 export class AIController {
   async getSettings(req: Request, res: Response, next: NextFunction): Promise<void> {

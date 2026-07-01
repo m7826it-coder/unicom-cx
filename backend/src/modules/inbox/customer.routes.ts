@@ -1,7 +1,7 @@
 // src/modules/inbox/customer.routes.ts
 import { Router } from 'express';
 import { customerController } from './customer.controller.js';
-import { authMiddleware } from '@/common/middleware/auth.middleware.js';
+import { authMiddleware } from '../../common/middleware/auth.middleware.js';
 import { body } from 'express-validator';
 
 const router = Router();

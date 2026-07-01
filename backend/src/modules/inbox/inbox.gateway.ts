@@ -2,8 +2,8 @@
 import { Server as HTTPServer } from 'http';
 import { Server, Socket } from 'socket.io';
 import jwt from 'jsonwebtoken';
-import { env } from '@/config/env.js';
-import { logger } from '@/common/utils/logger.js';
+import { env } from '../../config/env.js';
+import { logger } from '../../common/utils/logger.js';
 
 let io: Server | null = null;
 

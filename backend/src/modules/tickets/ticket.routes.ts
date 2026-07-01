@@ -1,7 +1,7 @@
 // src/modules/tickets/ticket.routes.ts
 import { Router } from 'express';
 import { ticketController } from './ticket.controller.js';
-import { authMiddleware } from '@/common/middleware/auth.middleware.js';
+import { authMiddleware } from '../../common/middleware/auth.middleware.js';
 import { body } from 'express-validator';
 
 const router = Router();

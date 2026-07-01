@@ -1,7 +1,7 @@
 // src/config/prisma.middleware.ts
 import prisma from './database.js';
 import { AsyncLocalStorage } from 'async_hooks';
-import { logger } from '@/common/utils/logger.js';
+import { logger } from '../common/utils/logger.js';
 
 export const orgIdStore = new AsyncLocalStorage<string>();
 

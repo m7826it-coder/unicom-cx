@@ -1,5 +1,5 @@
 // src/config/secrets.ts
-import { logger } from '@/common/utils/logger.js';
+import { logger } from '../common/utils/logger.js';
 
 let SecretManagerClient: any = null;
 try {

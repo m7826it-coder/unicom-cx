@@ -1,9 +1,9 @@
 // src/modules/inbox/services/message.service.ts
-import prisma from '@/config/database.js';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
-import { outboundQueue, aiAnalysisQueue, notificationQueue } from '@/common/queues/index.js';
-import { Events } from '@/common/events/events.js';
+import prisma from '../../../config/database.js';
+import { ApiError } from '../../../common/utils/ApiError.js';
+import { logger } from '../../../common/utils/logger.js';
+import { outboundQueue, aiAnalysisQueue, notificationQueue } from '../../../common/queues/index.js';
+import { Events } from '../../../common/events/events.js';
 import { conversationService } from './conversation.service.js';
 import { customerService } from './customer.service.js';
 import type { ContentType, ChannelType } from '@prisma/client';

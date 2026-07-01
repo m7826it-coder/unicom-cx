@@ -1,8 +1,8 @@
 // src/modules/analytics/analytics.controller.ts
 import type { Request, Response, NextFunction } from 'express';
 import { analyticsService } from './analytics.service.js';
-import { success } from '@/common/utils/responseHelper.js';
-import { logger } from '@/common/utils/logger.js';
+import { success } from '../../common/utils/responseHelper.js';
+import { logger } from '../../common/utils/logger.js';
 
 export class AnalyticsController {
   async getOverview(req: Request, res: Response, next: NextFunction): Promise<void> {

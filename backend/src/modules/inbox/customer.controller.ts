@@ -1,8 +1,8 @@
 // src/modules/inbox/customer.controller.ts
 import type { Request, Response, NextFunction } from 'express';
 import { customerService } from './services/customer.service.js';
-import { success, created } from '@/common/utils/responseHelper.js';
-import { logger } from '@/common/utils/logger.js';
+import { success, created } from '../../common/utils/responseHelper.js';
+import { logger } from '../../common/utils/logger.js';
 
 export class CustomerController {
   async getCustomer(req: Request, res: Response, next: NextFunction): Promise<void> {

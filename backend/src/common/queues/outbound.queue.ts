@@ -1,5 +1,5 @@
 // src/common/queues/outbound.queue.ts
-import { createQueue } from '@/config/bullmq.js';
+import { createQueue } from '../../config/bullmq.js';
 
 /**
  * طابور الرسائل الصادرة. يستخدمها Core API لإرسال

@@ -1,7 +1,7 @@
 // src/config/bullmq.ts
 import { Queue } from 'bullmq';
 import { env } from './env.js';
-import { logger } from '@/common/utils/logger.js';
+import { logger } from '../common/utils/logger.js';
 
 const redisUrl = new URL(env.REDIS_URL);
 

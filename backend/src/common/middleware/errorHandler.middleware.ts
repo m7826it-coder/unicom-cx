@@ -1,8 +1,8 @@
 // src/common/middleware/errorHandler.middleware.ts
 import type { Request, Response, NextFunction } from 'express';
-import { ApiError } from '@/common/utils/ApiError.js';
-import { logger } from '@/common/utils/logger.js';
-import { env } from '@/config/env.js';
+import { ApiError } from '../../common/utils/ApiError.js';
+import { logger } from '../../common/utils/logger.js';
+import { env } from '../../config/env.js';
 
 interface ValidationError {
   msg: string;

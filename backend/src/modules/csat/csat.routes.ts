@@ -1,7 +1,7 @@
 // src/modules/csat/csat.routes.ts
 import { Router } from 'express';
 import { csatController } from './csat.controller.js';
-import { authMiddleware } from '@/common/middleware/auth.middleware.js';
+import { authMiddleware } from '../../common/middleware/auth.middleware.js';
 import { body } from 'express-validator';
 
 const router = Router();
