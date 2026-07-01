@@ -50,3 +50,7 @@ export async function fetchApi<T>(path: string, options?: RequestInit): Promise<
     errorBody.errors
   );
 }
+/** إصدار من fetchApi يُرجع T فقط – للاستخدام مع useQuery */
+export async function fetchData<T>(path: string, options?: RequestInit): Promise<T> {
+  return fetchApi<T>(path, options) as Promise<T>;
+  }
