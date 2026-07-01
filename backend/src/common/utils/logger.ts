@@ -2,8 +2,7 @@
 import pino from 'pino';
 import { env } from '../../config/env.js';
 
-const isProduction =
-  env.NODE_ENV === 'production' || env.NODE_ENV === 'staging';
+const isProduction = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 
 const pinoLogger = pino({
   level: isProduction ? 'info' : 'debug',
