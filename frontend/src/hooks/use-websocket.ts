@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { Socket } from 'socket.io-client'; // ✅ تم التعديل: إزالة 'type' لحل الخطأ
+import { Socket } from 'socket.io-client'; // ✅ تم إزالة 'type'
 import { createSocket, disconnectSocket } from '@/services/socket.service';
 
 export function useWebSocket(): { socket: Socket | null; isConnected: boolean } {
@@ -11,27 +11,20 @@ export function useWebSocket(): { socket: Socket | null; isConnected: boolean } 
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
-    // ✅ تم التعديل: إضافة backticks `` لتكوين RegExp بشكل صحيح
+    // ✅ تم إصلاح RegExp بإضافة backticks
     const getCookie = (name: string): string | null => {
       const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
       return match ? decodeURIComponent(match[2]) : null;
     };
 
     const token = getCookie('token');
-    if (!token) {
-      return;
-    }
+    if (!token) return;
 
     const socket = createSocket(token);
     socketRef.current = socket;
 
-    socket.on('connect', () => {
-      setIsConnected(true);
-    });
-
-    socket.on('disconnect', () => {
-      setIsConnected(false);
-    });
+    socket.on('connect', () => setIsConnected(true));
+    socket.on('disconnect', () => setIsConnected(false));
 
     socket.on('conversation:new', () => {
       queryClient.invalidateQueries({ queryKey: ['conversations'] });
