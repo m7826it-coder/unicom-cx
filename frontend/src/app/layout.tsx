@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Tajawal } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
@@ -25,10 +25,14 @@ export const metadata: Metadata = {
     title: 'UniCom CX',
     statusBarStyle: 'default',
   },
-  themeColor: '#3b82f6',
+  // themeColor: '#3b82f6',  ← تم حذفه من هنا
   other: {
     'mobile-web-app-capable': 'yes',
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#3b82f6', // ← المكان الصحيح
 };
 
 export default function RootLayout({
