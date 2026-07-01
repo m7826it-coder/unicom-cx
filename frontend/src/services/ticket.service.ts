@@ -1,4 +1,4 @@
-import { fetchApi, type PaginatedResponse } from '@/services/api-client';
+import { fetchApi, fetchData, type PaginatedResponse } from '@/services/api-client';
 import type {
   TicketResponse,
   CreateTicketRequest,
@@ -29,25 +29,25 @@ export class TicketService {
   }
 
   async getTicket(id: string): Promise<TicketResponse> {
-    return fetchApi<TicketResponse>(`/tickets/${id}`);
+    return fetchData<TicketResponse>(`/tickets/${id}`);
   }
 
   async createTicket(data: CreateTicketRequest): Promise<TicketResponse> {
-    return fetchApi<TicketResponse>('/tickets', {
+    return fetchData<TicketResponse>('/tickets', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async createTicketFromConversation(conversationId: string, data: CreateTicketRequest): Promise<TicketResponse> {
-    return fetchApi<TicketResponse>(`/tickets/from-conversation/${conversationId}`, {
+    return fetchData<TicketResponse>(`/tickets/from-conversation/${conversationId}`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async updateTicket(id: string, data: UpdateTicketRequest): Promise<TicketResponse> {
-    return fetchApi<TicketResponse>(`/tickets/${id}`, {
+    return fetchData<TicketResponse>(`/tickets/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
