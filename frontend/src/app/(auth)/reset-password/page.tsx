@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, Suspense } from 'react';
@@ -13,7 +14,6 @@ import { fetchApi } from '@/services/api-client';
 import { resetPasswordSchema, type ResetPasswordFormData } from '@/lib/validators';
 import { cn } from '@/lib/utils';
 
-// مكون داخلي يستخدم useSearchParams
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
@@ -218,17 +218,10 @@ function ResetPasswordForm() {
   );
 }
 
-// الصفحة الرئيسية مع Suspense
 export default function ResetPasswordPage() {
   return (
-    <Suspense
-      fallback={
-        <div className="flex min-h-screen items-center justify-center">
-          جاري التحميل...
-        </div>
-      }
-    >
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">جاري التحميل...</div>}>
       <ResetPasswordForm />
     </Suspense>
   );
-      }}
+}
