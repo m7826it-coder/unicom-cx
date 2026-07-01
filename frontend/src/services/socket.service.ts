@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client'; // ✅ دمج الاستيرادات بدون 'type'
+import { io, Socket } from 'socket.io-client'; // ✅ استيراد موحد
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -16,11 +16,9 @@ export function createSocket(token: string): Socket {
   socket.on('connect', () => {
     console.log('🔌 WebSocket connected:', socket.id);
   });
-
   socket.on('disconnect', (reason) => {
     console.log('🔌 WebSocket disconnected:', reason);
   });
-
   socket.on('connect_error', (error) => {
     console.error('🔌 WebSocket connection error:', error.message);
   });
