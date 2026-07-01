@@ -1,4 +1,4 @@
-import { fetchData, type PaginatedResponse } from '@/services/api-client';
+import { fetchData,fetchApi, type PaginatedResponse } from '@/services/api-client';
 import type {
   CSATSurveyResponse,
   CSATSurveyFilters,
