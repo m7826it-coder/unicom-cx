@@ -5,7 +5,7 @@ import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import TicketList from '@/components/tickets/ticket-list';
 import CreateTicketDialog from '@/components/tickets/create-ticket-dialog';
-
+export const dynamic = 'force-dynamic';
 export default function TicketsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
