@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
-import { fetchApi } from '@/services/api-client';
+import { fetchApi, fetchData} from '@/services/api-client';
 import { cn } from '@/lib/utils';
 
 interface CustomerProfile {
@@ -46,11 +46,11 @@ export default function CustomerSidebar({ conversationId, open, onOpenChange }: 
   const { data: customer, isLoading, isError } = useQuery<CustomerProfile>({
     queryKey: ['customer', conversationId],
     queryFn: async () => {
-      const conversation = await fetchApi<any>(`/inbox/conversations/${conversationId}`);
-      const customerId = conversation?.customerId;
-      if (!customerId) throw new Error('Customer not found');
-      return fetchApi<CustomerProfile>(`/customers/${customerId}`);
-    },
+  const conversation = await fetchApi<any>(`/inbox/conversations/${conversationId}`);
+  const customerId = conversation?.customerId;
+  if (!customerId) throw new Error('Customer not found');
+  return fetchData<CustomerProfile>(`/customers/${customerId}`);
+},
     enabled: !!conversationId && open,
   });
 
