@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client'; // ✅ استيراد موحد
+import { io, type Socket } from 'socket.io-client'; // ✅ استيراد القيمة io والنوع Socket
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
