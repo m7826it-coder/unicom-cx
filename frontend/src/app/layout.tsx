@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Inter, Tajawal } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import Providers from './providers'; // 👈 أضف هذا السطر
 
 const inter = Inter({
   subsets: ['latin'],
@@ -25,14 +26,13 @@ export const metadata: Metadata = {
     title: 'UniCom CX',
     statusBarStyle: 'default',
   },
-  // themeColor: '#3b82f6',  ← تم حذفه من هنا
   other: {
     'mobile-web-app-capable': 'yes',
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: '#3b82f6', // ← المكان الصحيح
+  themeColor: '#3b82f6',
 };
 
 export default function RootLayout({
@@ -51,7 +51,9 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body className="min-h-screen bg-background font-sans text-foreground antialiased">
-        {children}
+        <Providers> {/* 👈 أضف هذا الغلاف */}
+          {children}
+        </Providers>
         <Script
           id="register-sw"
           strategy="afterInteractive"
