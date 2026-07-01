@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { authService } from '@/services/auth.service';
-import { fetchApi } from '@/services/api-client';
+import { fetchApi,fetchData } from '@/services/api-client';
 import type { AuthMeResponse } from '@/types/auth.types';
 
 const CHANNEL_OPTIONS = [
