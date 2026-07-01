@@ -2,7 +2,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { MessageSquareText, MessageCircle, CheckCircle2, Clock } from 'lucide-react';
-import { fetchApi } from '@/services/api-client';
+import { fetchApi,fetchData } from '@/services/api-client';
 import StatsCard from '@/components/dashboard/stats-card';
 import ChannelPieChart from '@/components/dashboard/channel-pie-chart';
 import VolumeLineChart from '@/components/dashboard/volume-line-chart';
