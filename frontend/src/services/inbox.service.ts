@@ -1,4 +1,4 @@
-import { fetchApi, type PaginatedResponse } from '@/services/api-client';
+import { fetchApi, fetchData, type PaginatedResponse } from '@/services/api-client';
 import type {
   ConversationSummary,
   ConversationDetail,
@@ -33,7 +33,7 @@ export class InboxService {
   }
 
   async getConversation(id: string): Promise<ConversationDetail> {
-    return fetchApi<ConversationDetail>(`/inbox/conversations/${id}`);
+    return fetchData<ConversationDetail>(`/inbox/conversations/${id}`);
   }
 
   async getMessages(conversationId: string, page: number = 1, limit: number = 50): Promise<PaginatedResponse<MessageResponse[]>> {
@@ -49,14 +49,14 @@ export class InboxService {
   }
 
   async sendMessage(conversationId: string, data: SendMessageRequest): Promise<MessageResponse> {
-    return fetchApi<MessageResponse>(`/inbox/conversations/${conversationId}/messages`, {
+    return fetchData<MessageResponse>(`/inbox/conversations/${conversationId}/messages`, {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
   async updateConversation(conversationId: string, data: UpdateConversationRequest): Promise<ConversationSummary> {
-    return fetchApi<ConversationSummary>(`/inbox/conversations/${conversationId}`, {
+    return fetchData<ConversationSummary>(`/inbox/conversations/${conversationId}`, {
       method: 'PATCH',
       body: JSON.stringify(data),
     });
