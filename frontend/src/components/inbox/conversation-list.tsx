@@ -1,5 +1,5 @@
 'use client';
-
+import type { ConversationSummary } from '@/types/inbox.types';
 import { useState, useCallback } from 'react';
 import ConversationItem from './conversation-item';
 import ConversationFilters from './conversation-filters';
@@ -57,7 +57,7 @@ export default function ConversationList({ onSelectConversation, selectedConvers
 
         {!isLoading &&
           !isError &&
-          conversations.map((conv) => (
+          conversations.map((conv: ConversationSummary) => (
             <ConversationItem
               key={conv.id}
               conversation={conv}
