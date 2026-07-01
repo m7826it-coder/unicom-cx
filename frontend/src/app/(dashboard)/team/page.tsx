@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import MemberList from '@/components/team/member-list';
 import InviteMemberDialog from '@/components/team/invite-member-dialog';
 import { authService } from '@/services/auth.service';
-
+export const dynamic = 'force-dynamic';
 export default function TeamPage() {
   const [isInviteDialogOpen, setIsInviteDialogOpen] = useState(false);
 
