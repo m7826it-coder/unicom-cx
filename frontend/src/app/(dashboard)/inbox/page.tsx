@@ -5,6 +5,7 @@ import { ArrowRight, Inbox } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ConversationList from '@/components/inbox/conversation-list';
 
+export const dynamic = 'force-dynamic';
 export default function InboxPage() {
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
   const [showConversation, setShowConversation] = useState(false);
