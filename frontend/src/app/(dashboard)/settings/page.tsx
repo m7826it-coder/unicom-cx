@@ -61,7 +61,7 @@ export default function SettingsPage() {
 
   const { data: botSettings, isLoading: botLoading, isError: botError, refetch: refetchBot } = useQuery<BotSettingsFormData>({
     queryKey: ['bot-settings'],
-    queryFn: () => fetchApi<BotSettingsFormData>('/ai/settings'),
+    queryFn: () => fetchData<BotSettingsFormData>('/ai/settings'),
   });
 
   const {
