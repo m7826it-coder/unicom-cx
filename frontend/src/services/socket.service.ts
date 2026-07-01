@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client'; // ✅ تم التعديل: دمج الاستيرادات وإزالة 'type'
+import { io, Socket } from 'socket.io-client'; // ✅ دمج الاستيرادات بدون 'type'
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
