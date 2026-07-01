@@ -1,6 +1,6 @@
 // src/common/utils/logger.ts
 import pino from 'pino';
-import { env } from '../../config/env.js';
+import { env } from '../../config/env';
 
 const isProduction = process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'staging';
 
