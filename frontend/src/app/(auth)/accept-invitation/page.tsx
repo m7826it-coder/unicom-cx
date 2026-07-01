@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useSearchParams } from 'next/navigation';
@@ -13,7 +13,8 @@ import { fetchApi } from '@/services/api-client';
 import { acceptInvitationSchema, type AcceptInvitationFormData } from '@/lib/validators';
 import { cn } from '@/lib/utils';
 
-export default function AcceptInvitationPage() {
+// المكون الداخلي الذي يستخدم useSearchParams
+function AcceptInvitationForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
@@ -135,5 +136,14 @@ export default function AcceptInvitationPage() {
         </CardFooter>
       </Card>
     </div>
+  );
+}
+
+// الصفحة الرئيسية مع Suspense
+export default function AcceptInvitationPage() {
+  return (
+    <Suspense fallback={<div className="flex min-h-screen items-center justify-center">جاري التحميل...</div>}>
+      <AcceptInvitationForm />
+    </Suspense>
   );
 }
