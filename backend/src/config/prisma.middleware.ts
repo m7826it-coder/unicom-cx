@@ -1,5 +1,3 @@
-// src/config/prisma.middleware.ts
-import prisma from './database.js';
 import { AsyncLocalStorage } from 'async_hooks';
 import { logger } from '../common/utils/logger.js';
 
@@ -29,7 +27,7 @@ const ACTIONS_WITH_WHERE = new Set([
   'deleteMany',
 ]);
 
-export function applyPrismaMiddleware(): void {
+export function applyPrismaMiddleware(prisma: any): void {
   prisma.$use(async (params, next) => {
     const { action, model, args } = params;
 
