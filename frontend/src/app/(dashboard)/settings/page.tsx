@@ -16,7 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { authService } from '@/services/auth.service';
 import { fetchApi,fetchData } from '@/services/api-client';
 import type { AuthMeResponse } from '@/types/auth.types';
-
+export const dynamic = 'force-dynamic';
 const CHANNEL_OPTIONS = [
   { value: 'WHATSAPP', label: '📱 واتساب' },
   { value: 'INSTAGRAM', label: '📷 إنستغرام' },
