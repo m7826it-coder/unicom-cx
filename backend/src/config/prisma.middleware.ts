@@ -1,34 +1,21 @@
+// src/config/prisma.middleware.ts
 import { AsyncLocalStorage } from 'async_hooks';
 import { logger } from '../common/utils/logger.js';
 
 export const orgIdStore = new AsyncLocalStorage<string>();
 
 const MULTI_TENANT_MODELS = new Set([
-  'User',
-  'Customer',
-  'Conversation',
-  'Message',
-  'Ticket',
-  'SatisfactionSurvey',
-  'QuickReply',
-  'KnowledgeBaseEntry',
-  'CustomerTag',
-  'CustomerNote',
-  'Channel',
+  'User', 'Customer', 'Conversation', 'Message', 'Ticket',
+  'SatisfactionSurvey', 'QuickReply', 'KnowledgeBaseEntry',
+  'CustomerTag', 'CustomerNote', 'Channel',
 ]);
 
 const ACTIONS_WITH_WHERE = new Set([
-  'findUnique',
-  'findFirst',
-  'findMany',
-  'update',
-  'updateMany',
-  'delete',
-  'deleteMany',
+  'findUnique', 'findFirst', 'findMany', 'update', 'updateMany', 'delete', 'deleteMany',
 ]);
 
-export function applyPrismaMiddleware(prisma: any): void {
-  prisma.$use(async (params, next) => {
+export function applyPrismaMiddleware(prismaClient: any): void {
+  prismaClient.$use(async (params: any, next: any) => {
     const { action, model, args } = params;
 
     if (model && MULTI_TENANT_MODELS.has(model) && ACTIONS_WITH_WHERE.has(action)) {
@@ -46,14 +33,11 @@ export function applyPrismaMiddleware(prisma: any): void {
           args.where.orgId = orgId;
         } else {
           logger.warn(`PrismaMiddleware: orgId missing for ${model}.${action}`, {
-            model,
-            action,
-            hasWhere: !!args.where,
+            model, action, hasWhere: !!args.where,
           });
         }
       }
     }
-
     return next(params);
   });
 }

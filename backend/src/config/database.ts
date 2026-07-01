@@ -1,9 +1,9 @@
+// src/config/database.ts
 import { PrismaClient } from '@prisma/client';
 import { applyPrismaMiddleware } from './prisma.middleware.js';
 
 const prisma = new PrismaClient();
-
-applyPrismaMiddleware(prisma);
+applyPrismaMiddleware(prisma); // تمرير prisma هنا
 
 prisma.$connect().then(() => {
   console.log('🗄️  Prisma Client connected');
