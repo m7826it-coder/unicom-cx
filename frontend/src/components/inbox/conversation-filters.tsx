@@ -82,7 +82,7 @@ export default function ConversationFilters({ onFiltersChange }: ConversationFil
             value={status}
             onValueChange={(val) => {
               setStatus(val);
-              applyFilters({ status: val });
+              applyFilters({ status: val as Filters['status'] });
             }}
           >
             <DropdownMenuRadioItem value="">الكل</DropdownMenuRadioItem>
@@ -96,7 +96,7 @@ export default function ConversationFilters({ onFiltersChange }: ConversationFil
             value={assignedTo}
             onValueChange={(val) => {
               setAssignedTo(val);
-              applyFilters({ assignedTo: val });
+              applyFilters({ assignedTo: val as Filters['assignedTo'] });
             }}
           >
             <DropdownMenuRadioItem value="">الكل</DropdownMenuRadioItem>
